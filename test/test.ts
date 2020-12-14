@@ -8,6 +8,7 @@ let ken = 'My name is I study computer science Ken at Northeastern'
 let ken2 = 'Northeastern I study computer Ken science at'
 let brandon = 'My name I study computer science at Northeastern'
 
+let testseq = [77, 74, 42, 17, 98, 50, 17, 98, 8]
 let windows = [[77,74,42,17],[74,42,17,98],[42,17,98,50],[17,98,50,17],[98,50,17,98],[50,17,98,8]]
 let output = [[17,3],[17,3],[8,3]]
 
@@ -35,6 +36,6 @@ console.log('/////')
 console.log(winnowing(kgrams(preprocess(ken2),5),4))
 */
 
-console.log(findmin(windows))
+console.log(findmin(windows, testseq))
     
   

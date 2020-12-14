@@ -106,7 +106,7 @@ export function winnowing(arr:Array<String>,size:number):Array<Array<number>> {
 
 
 //selet the minimum of fingerprints in window
-export function findmin(windows: Array<Array<number>>) : Array<Array<number>> {
+export function findmin(windows: Array<Array<number>>, originalHashString: Array<number>) : Array<Array<number>> {
     let tempmin = 0
 
     //object key -> [value,index]
@@ -131,6 +131,16 @@ export function findmin(windows: Array<Array<number>>) : Array<Array<number>> {
         }
            
     }
+
+    let j = 0; 
+    for(let i = 0; i < originalHashString.length; i++) {
+        if(fingerprints[j][0] === originalHashString[i]) {
+            fingerprints[j][1] = i; 
+            j++; 
+        }   
+    }
+
+
 
     return fingerprints
 }
