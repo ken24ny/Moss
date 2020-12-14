@@ -1,10 +1,29 @@
 import * as fs from 'fs';
 import traverse from "babel-traverse";
-//import Store from './Store';
-// removes all white space from a string of programs and coverts to lowercase
-let babel = require("babel-core")
-let parser1 = require("./visitFunctions1")
-let parser2 = require("./visitFunctions2")
+import { ENGINE_METHOD_PKEY_ASN1_METHS } from 'constants';
+//import Store from './Store'; 
+let x = 0 // removes all white space from a string of programs and coverts to lowercase
+
+let hashDictionary = {}
+
+
+//for line in original file 
+//if(line.substring(0, 2) == "//")  
+//ignore
+//
+
+
+//hashcode
+//get substr from hashcode 
+//for line in origfile 
+//if line includes "//"
+//line = line.substring(0, line.indexOf("//")); 
+//if line contains targetSubStr 
+//remove the substring from the original file at that particular line and update our copy of the original file (to avoid repetitions)
+//return line number 
+//lineno++ 
+
+
 export function removeWhiteSpace(program: string): string {
     return program.toLowerCase().replace(/\s/g, "");
     
@@ -66,6 +85,9 @@ export function kgrams(program:string, k:number): Array<String> {
     return result
 }
 
+
+
+
 export function hash(text:String):number {
     let hashcode = 0;
     let basis = 7
@@ -81,7 +103,11 @@ export function winnowing(arr:Array<String>,size:number):Array<Array<number>> {
     let hasharray = []
     let result = Array<Array<number>>()
     for(let el of arr) {
+
         hasharray.push(hash(el))
+        hashDictionary[hash(el)] = el;
+        
+        
     }
     let start = 0
     let end = size
@@ -132,18 +158,35 @@ export function findmin(windows: Array<Array<number>>, originalHashString: Array
            
     }
 
-    let j = 0; 
-    for(let i = 0; i < originalHashString.length; i++) {
-        if(fingerprints[j][0] === originalHashString[i]) {
-            fingerprints[j][1] = i; 
-            j++; 
-        }   
+    for(let fingerprint of fingerprints) {
+        fingerprint[0] = hashDictionary[fingerprint[0]]
     }
+
+    
+
+    //Approach 1
+    //map the hash back to the original string [done]
+    //have a method to return the line number in which it appears by going through the original file 
+    //add the line number to the fingerprint
+
+
+    //Approach 2
+    //keep line numbers in kgrams 
+    //give each hash a line number associated with it
+
+
+    //Approach 3
+    //for every line get the first and last kgrams
+    //convert to hash
+    //assign line number
+    //find those hash in the list of hashes 
 
 
 
     return fingerprints
+    
 }
+
 
 /*
 export function reorderedMatch(program1 :String, program2 :String): Boolean {
