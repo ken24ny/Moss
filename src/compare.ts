@@ -1,6 +1,8 @@
 import * as fs from 'fs';
 import traverse from "babel-traverse";
 import { ENGINE_METHOD_PKEY_ASN1_METHS } from 'constants';
+import Result from "./Result"
+import Match from './Match';
 //import Store from './Store'; 
 let x = 0 // removes all white space from a string of programs and coverts to lowercase
 
@@ -23,6 +25,23 @@ let hashDictionary = {}
 //return line number 
 //lineno++ 
 
+export function compare(fingerprints1 :Array<Array<number>>, fingerprints2 :Array<Array<number>>) {
+    let id = 1; 
+    for(let f1 of fingerprints1) {
+        for(let f2 of fingerprints2) {
+            if(f1[0] === f2[0]) {
+                let match = new Match(id, f1[0], f1[1], f2[1], "person1", "person2"); 
+                Result.matches.push(match)
+                id++; 
+               
+            }
+        }
+    }
+
+    return Result.matches
+    //console.log(Result.matches); 
+
+}
 
 export function removeWhiteSpace(program: string): string {
     return program.toLowerCase().replace(/\s/g, "");

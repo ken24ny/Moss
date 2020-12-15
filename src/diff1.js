@@ -20,7 +20,6 @@ function blocksContains(bs, b) {
 exports.blocksContains = blocksContains;
 // is blockset bs1 a subset of blockset 2?
 function isBlocksSubset(bs1, bs2) {
-    
     for (var i = 0; i < blocksCount(bs1); i++) {
         if (!blocksContains(bs2, bs1[i]))
             return false;

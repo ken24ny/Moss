@@ -1,0 +1,42 @@
+// Match
+
+[
+    {
+        "id": number,
+        "student1Code": {
+            "fileName": string,
+            "startLine": number,
+            "endLine": number
+        },
+        "student2Code": {
+            "fileName": string,
+            "startLine": number,
+            "endLine": number
+        }
+    }
+]
+
+
+// if we have time to get this info this is what the responses would look like
+//Recent Check
+
+[
+    {
+        "id": number,
+        "date": string,
+        "class": string,
+        "assignment": string,
+        "score": number 
+    }
+]
+
+// user 
+[
+    {
+        "firstName": string,
+        "lastName": string,
+        "jobTitle": string,
+        "email": string,
+        "password": string 
+    }
+]
