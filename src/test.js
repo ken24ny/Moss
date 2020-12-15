@@ -1,8 +1,3 @@
-//comment
-
-let a
-
-let b
-/*
-
-*/
+while(i < 10) {
+    i++
+}

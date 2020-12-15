@@ -27,9 +27,9 @@ let pro2 = [[245,1],[756,12],[895,32],[895,43]]
 //console.log(compare(pro1, pro2))
 let fc = new FileComparator(program1, program2)//.build(program1, program2, 10, 6)
 console.log(fc.winnowing(fc.lineGrams(fc.removeWhiteSpace(fc.file1), 5), 4)); 
-console.log(fc.findFingerprints(fc.winnowing(fc.lineGrams(fc.removeWhiteSpace(fc.file1), 10), 6)));  
-fc.clear(); 
-console.log(fc.findFingerprints(fc.winnowing(fc.lineGrams(fc.removeWhiteSpace(fc.file2), 5), 4))); 
+console.log(fc.findFingerprints(fc.winnowing(fc.lineGrams(fc.removeWhiteSpace(fc.file1), 5), 4)));  
+
+//console.log(fc.findFingerprints(fc.winnowing(fc.lineGrams(fc.removeWhiteSpace(fc.file2), 5), 4))); 
 
 
 
