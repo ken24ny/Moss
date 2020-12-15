@@ -30,10 +30,12 @@ class FileComparator {
    //dictionary that stores [1, [hidf , ndndd, dskn]],[2,[]hdhsi cdhscn csk]  ... 
 
 
+   /*
    constructor(f1 :Buffer, f2 :Buffer) {
         this.file1 = f1.toString()
         this.file2 = f2.toString()
    }
+   */
     
    //pass in buffers
    //TODO change from Buffer to File (or whatever Sky needs)
@@ -46,7 +48,7 @@ class FileComparator {
         this.file1 = f1.toString()
         this.file2 = f2.toString()
 
-       // let a = this.findFingerprints(this.winnowing(this.lineGrams(this.removeWhiteSpace(this.file1), k), w))
+        let a = this.findFingerprints(this.winnowing(this.lineGrams(this.removeWhiteSpace(this.file1), k), w))
        // console.log(a); 
       //  this.clear()
       //  let b = this.findFingerprints(this.winnowing(this.lineGrams(this.removeWhiteSpace(this.file2), k), w))
@@ -54,8 +56,8 @@ class FileComparator {
 
         
         //console.log(b); 
-        //let b = this.findFingerprints(this.winnowing(this.lineGrams(this.removeWhiteSpace(this.file2), k), w))
-        //this.compare(a, b)
+        let b = this.findFingerprints(this.winnowing(this.lineGrams(this.removeWhiteSpace(this.file2), k), w))
+        console.log(this.compare(a, b))
         ////////console.log(this.findFingerprints(this.winnowing(this.kgrams(this.preprocess(this.file2), k), w), this.kgram2))
 
     }
@@ -98,6 +100,7 @@ class FileComparator {
             }
         }
 
+        return Result.matches
         //console.log(Result.matches); 
 
     }
@@ -203,18 +206,11 @@ class FileComparator {
             lineno++; 
         
     }
-        ////////console.log(this.lineDictionary)
         this.orig = result;
         for(let i = 0; i < this.orig.length; i++) {
             this.origHashed.push(this.hash(this.orig[i]))
         }
-        ////////console.log("Result of original winnowing");
-
-       // ////////console.log(this.orig)
-
-        ////////console.log("Result of original winnowing as hash");
-
-        ////////console.log(this.origHashed)
+        
 
         return result; 
     }
@@ -244,9 +240,6 @@ class FileComparator {
         }
         let start = 0
         let end = size
-        //////////console.log(hasharray)
-    
-       // ////////console.log(hasharray[0])
         
         while(end != arr.length + 1){
             let temp = []
@@ -258,14 +251,12 @@ class FileComparator {
             end++
            
        }
-      // ////////console.log("result of winnowing the original hash")
-      // ////////console.log(result)
         return result
     
     }
     
 
-    //
+    
     
     //selet the minimum of fingerprints in window
     findFingerprints(windows: Array<Array<number>>) : Array<Array<number>> {
@@ -278,10 +269,11 @@ class FileComparator {
         
         let result = Array<number>()
         for(let window of windows) {
+           
             let tempmin = Math.min(...window)
             let index = window.lastIndexOf(tempmin)
             
-
+            
 
             //0
             // i = 0
@@ -311,9 +303,9 @@ class FileComparator {
             saveIndex = index;
             
         }
+        
+        this.origHashed = []; 
 
-        //console.log("fingerprints after we look for the indices in the original hash")
-        //console.log(fingerprints)
 
         this.getLineNo(fingerprints)
 
@@ -327,32 +319,12 @@ class FileComparator {
     
         
     
-        //Approach 1
-        //map the hash back to the original string [done]
-        //have a method to return the line number in which it appears by going through the original file 
-        //add the line number to the fingerprint
-    
-    
-        //Approach 2
-        //keep line numbers in kgrams 
-        //give each hash a line number associated with it
-    
-    
-        //Approach 3
-        //for every line get the first and last kgrams
-        //convert to hash
-        //assign line number
-        //find those hash in the list of hashes 
-    
-    
     
         return fingerprints
         
     }
 
     getLineNo(fingerprints :Array<Array<number>>) {
-        //stores line number and how many things are associated with that line number
-        let arr = Array[0]; //index is the line,storing # of items in each line 
         let numberOfElements = 0; 
         let j = 0; 
         for(let key in this.lineDictionary) {
@@ -364,62 +336,22 @@ class FileComparator {
                     break; 
                 }
 
-                //////////console.log(fingerprints[j][1])
                 if(numberOfElements === fingerprints[j][1]) {
                     fingerprints[j][1] = parseInt(key, 10); 
                     j++; 
                 }
                 numberOfElements++; 
-                //////////console.log("a")
                 
                 
             }
-           // this.arr.push(value.size)
          
         }
 
-        //////////console.log(fingerprints); 
 
-        
     }
 
     
-    
-    /*
-    export function reorderedMatch(program1 :String, program2 :String): Boolean {
-        let match = 0; 
-        let out1 = babel.transform(program1, {
-            plugins: [parser1]
-          });
-        
-          let out2 = babel.transform(program2, {
-            plugins: [parser2]
-          });
-          
-          if(Store.p1.length !== Store.p2.length) {
-              return false; 
-          }
-          
-          for(let func1 of Store.p1) {
-
-              for(let func2 of Store.p2) {
-                if(func1 === func2) {
-                //////console.log("Match found at " + func1 + " and " + func2)
-                match++; 
-                }
-              }
-          }
-    
-          return match === Store.p1.length; 
-
-          
-       
-    
-    
-    
-    }
-    */
-    
+  
     
 
 

@@ -3,9 +3,8 @@ import * as fs from 'fs';
 
 import { compare } from "../src/compare"
 import FileComparator from "../src/FileComparator"
-
-let program1 = fs.readFileSync("src\\test2.js")
-let program2 = fs.readFileSync("src\\test.js")
+let program1 = fs.readFileSync("src\\diff1.js")
+let program2 = fs.readFileSync("src\\diff2.js")
 let test1 = 'This is a TEST to see IF THINGS Are CONverted correctLY thisi ab'
 let test2 = 'isthisworking'
 let ken = 'My name is I study computer science Ken at Northeastern'
@@ -25,25 +24,13 @@ let pro2 = [[245,1],[756,12],[895,32],[895,43]]
 
 
 //console.log(compare(pro1, pro2))
-let fc = new FileComparator(program1, program2)//.build(program1, program2, 10, 6)
-console.log(fc.winnowing(fc.lineGrams(fc.removeWhiteSpace(fc.file1), 5), 4)); 
-console.log(fc.findFingerprints(fc.winnowing(fc.lineGrams(fc.removeWhiteSpace(fc.file1), 5), 4)));  
+let fc = new FileComparator() 
+//fc.build(program1, program2, 5, 1)
 
-//console.log(fc.findFingerprints(fc.winnowing(fc.lineGrams(fc.removeWhiteSpace(fc.file2), 5), 4))); 
+let a = fc.findFingerprints(fc.winnowing(fc.lineGrams(fc.removeWhiteSpace(program1.toString()),15),15))
+let b = fc.findFingerprints(fc.winnowing(fc.lineGrams(fc.removeWhiteSpace(program2.toString()),15),15))
 
-
-
-
-
-//simpl     simp impl      [1,2,3][2,3,4][3,4,5]...[8,9,1]   1,3 4    
-//sim       sim
-//simple    simp impl mple
-//simple    simp impl mple 
-//test1     test est1                      8 /10
- 
-//simple    simp impl mple  [1,2,3][2,3,4][3,4,5]...[6,7,8]   1 2 4 
-//test2      test est2
-
+console.log(fc.compare(a,b))
 
 
 
@@ -71,9 +58,3 @@ console.log(winnowing(kgrams(preprocess(brandon),5),4))
 console.log('/////')
 console.log(winnowing(kgrams(preprocess(ken2),5),4))
 */
-
-    
-  
-// 3101
-// 3024
-// 2996
