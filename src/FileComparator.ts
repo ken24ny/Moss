@@ -43,12 +43,22 @@ class FileComparator {
    //result of comparing 
     build(f1 :Buffer, f2 :Buffer, k :number, w :number) {
 
-
+       
 
         this.file1 = f1.toString()
         this.file2 = f2.toString()
+        if(this.exactmatch(this.file1, this.file2)) {
+            
+            let match = new Match(1, 1, 1, this.countLines(this.file1), 1, this.countLines(this.file2), "bob", "alice")
+            Result.matches.push(match)
+            console.log(Result.matches)
+            
+        }
+        else {
 
         let a = this.findFingerprints(this.winnowing(this.lineGrams(this.removeWhiteSpace(this.file1), k), w))
+    
+
        // console.log(a); 
       //  this.clear()
       //  let b = this.findFingerprints(this.winnowing(this.lineGrams(this.removeWhiteSpace(this.file2), k), w))
@@ -57,8 +67,13 @@ class FileComparator {
         
         //console.log(b); 
         let b = this.findFingerprints(this.winnowing(this.lineGrams(this.removeWhiteSpace(this.file2), k), w))
-        console.log(this.compare(a, b))
+       // console.log(this.compare(a, b))
         ////////console.log(this.findFingerprints(this.winnowing(this.kgrams(this.preprocess(this.file2), k), w), this.kgram2))
+        }
+    }
+
+    countLines(file) {
+        return file.split("\n").length - 1; 
 
     }
 
@@ -92,7 +107,7 @@ class FileComparator {
             for(let f2 of fingerprints2) {
                 if(f1[0] === f2[0]) {
                     //console.log(f1 + " " + f2)
-                    let match = new Match(id, f1[0], f1[1], f2[1], "person1", "person2"); 
+                    let match = new Match(id, f1[0], f1[1], f1[1], f2[1], f2[1], "person1", "person2"); 
                     Result.matches.push(match)
                     id++; 
                    
@@ -101,9 +116,13 @@ class FileComparator {
         }
 
         return Result.matches
-        //console.log(Result.matches); 
 
     }
+
+     exactmatch(program1: string,program2: string): Boolean {
+        return this.removeWhiteSpace(program1) === this.removeWhiteSpace(program2);
+    }
+    
     
     
     
@@ -112,54 +131,8 @@ class FileComparator {
         
         return program.toLowerCase().replace(/ +?/g, '')
     }
-    
-    //removes comments from a file
-    preprocess(program: string): string {
-        let arr = program.split("\n")
-        let result = ""
-        for(let line of arr) {
-            if(line.includes('//')) {
-                result += line.substring(0,line.indexOf("//"))
-                result += "\n"
-             }
-            else {
-              result += line;
-              result += "\n"
-            }
-        }
-        
-        //removes white space and converts to lowercase
-        result = this.removeWhiteSpace(result)
-        //takes out all the block comments
-        while(result.indexOf('/*')!= -1) {
-            let i = result.indexOf('/*')
-            let j = result.indexOf('*/')
-            result = result.substring(0,i) + result.substring(j + 2,result.length)
-        }
-    
-        return result
-    }
-    
-     kgrams(program:string, k:number): Array<String> {
-        let result = Array<String>();
-        let end = k
-        let start = 0
-        while(end < program.length + 1) {
-    
-            if(end > program.length) {
-                result.push(program.substring(start,program.length))
-            }
-        
-             result.push(program.substring(start,end))
-             start += 1
-             end += 1
-        
-        }
-    
-        return result
-    }
-
     lineGrams(program:string, k:number) :Array<string> {
+        this.lineDictionary = {}; 
         
         let result :Array<string> = []
         let lineno :number = 1;
@@ -167,9 +140,14 @@ class FileComparator {
 
     
         for(let line of program.split("\n")) {
+            
+            let temp = []
+
             if(line.length < k) { 
-                
+                result.push(line.substring(0, line.length))
+                    temp.push(line.substring (0, line.length))
             }
+            else {
             let end = k
             let start = 0
             if(line.includes("//")) {
@@ -185,9 +163,7 @@ class FileComparator {
                 line = line.substring(line.indexOf("*/"), line.length + 1); 
                 insideComment = false; 
             }
-            let temp = []
-
-            while(!insideComment && end < line.length - 1) { 
+            while(!insideComment && end < line.length) { 
                
                 
                 if(end > line.length) {
@@ -203,6 +179,7 @@ class FileComparator {
                 this.lineDictionary[lineno] = temp; 
     
             }
+        }
             lineno++; 
         
     }
@@ -210,6 +187,8 @@ class FileComparator {
         for(let i = 0; i < this.orig.length; i++) {
             this.origHashed.push(this.hash(this.orig[i]))
         }
+
+        
         
 
         return result; 
@@ -305,7 +284,6 @@ class FileComparator {
         }
         
         this.origHashed = []; 
-
 
         this.getLineNo(fingerprints)
 

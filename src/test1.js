@@ -1,15 +1,14 @@
 //comment
-
-function subtract(a,b) {
+function add(a,b) {
     if(a>0) {
-        return a - b
+        return a+b
     }
     else {
-        return a - b + 0
+        return a+a+b
     }
 
 }
 
-/**
+/*
  * This is a block comment
  */

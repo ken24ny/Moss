@@ -30,8 +30,8 @@ export function compare(fingerprints1 :Array<Array<number>>, fingerprints2 :Arra
     for(let f1 of fingerprints1) {
         for(let f2 of fingerprints2) {
             if(f1[0] === f2[0]) {
-                let match = new Match(id, f1[0], f1[1], f2[1], "person1", "person2"); 
-                Result.matches.push(match)
+               // let match = new Match(id, f1[0], f1[1], f2[1], "person1", "person2"); 
+               // Result.matches.push(match)
                 id++; 
                
             }
