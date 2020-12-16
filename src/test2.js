@@ -1,5 +1,9 @@
 //comment
 
+/**
+ * This is a block comment
+ */
+
 function subtract(a,b) {
     if(a>0) {
         return a - b
@@ -10,6 +14,3 @@ function subtract(a,b) {
 
 }
 
-/**
- * This is a block comment
- */

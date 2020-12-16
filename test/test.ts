@@ -4,8 +4,8 @@ import * as fs from 'fs';
 import { compare } from "../src/compare"
 import FileComparator from "../src/FileComparator"
 import Result from "../src/Result"
-let program1 = fs.readFileSync("src\\test1.js")
-let program2 = fs.readFileSync("src\\test2.js")
+let program1 = fs.readFileSync("src\\diff1.js")
+let program2 = fs.readFileSync("src\\diff2.js")
 let test1 = 'This is a TEST to see IF THINGS Are CONverted correctLY thisi ab'
 let test2 = 'isthisworking'
 let ken = 'My name is I study computer science Ken at Northeastern'
@@ -26,8 +26,11 @@ let pro2 = [[245,1],[756,12],[895,32],[895,43]]
 
 //console.log(compare(pro1, pro2))
 let fc = new FileComparator() 
-fc.build(program1, program2, 3, 3)
-console.log(fc.lineDictionary); 
+fc.build(program1, program2, 3, 125)
+console.log()
+//console.log(fc.removeWhiteSpace(program1.toString()))
+
+
 //Result.addMatchesToJSON()
 //console.log(Result.matchesJSON)
 //fc.build(program1, program2, 5, 1)

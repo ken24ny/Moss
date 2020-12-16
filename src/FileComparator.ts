@@ -51,7 +51,7 @@ class FileComparator {
             
             let match = new Match(1, 1, 1, this.countLines(this.file1), 1, this.countLines(this.file2), "bob", "alice")
             Result.matches.push(match)
-            console.log(Result.matches)
+            //console.log(Result.matches)
             
         }
         else {
@@ -67,7 +67,7 @@ class FileComparator {
         
         //console.log(b); 
         let b = this.findFingerprints(this.winnowing(this.lineGrams(this.removeWhiteSpace(this.file2), k), w))
-       // console.log(this.compare(a, b))
+        console.log(this.compare(a, b))
         ////////console.log(this.findFingerprints(this.winnowing(this.kgrams(this.preprocess(this.file2), k), w), this.kgram2))
         }
     }
@@ -140,12 +140,12 @@ class FileComparator {
 
     
         for(let line of program.split("\n")) {
-            
+           
             let temp = []
 
             if(line.length < k) { 
-                result.push(line.substring(0, line.length))
-                    temp.push(line.substring (0, line.length))
+                result.push(line.substring(0, line.length + 1))
+                temp.push(line.substring (0, line.length + 1))
             }
             else {
             let end = k
@@ -156,37 +156,46 @@ class FileComparator {
             }
             if(line.includes("/*")) {
                 line = line.substring(0, line.indexOf("/*"))
+               
                 insideComment = true; 
             }
             //TODO fix single line problem
-             if(line.includes("*/")) {
+
+           
+            if(line.includes("*/")) {
                 line = line.substring(line.indexOf("*/"), line.length + 1); 
-                insideComment = false; 
+                insideComment = false;
+            }
+
+            if(insideComment) {
             }
             while(!insideComment && end < line.length) { 
-               
+              
                 
                 if(end > line.length) {
-                    result.push(line.substring(start, line.length))
-                    temp.push(line.substring (start, line.length))
+                    result.push(line.substring(start, line.length + 1))
+                    temp.push(line.substring (start, line.length+ 1))
+                   
                 }
 
-                result.push(line.substring(start, end))
-                temp.push(line.substring(start, end))
+                result.push(line.substring(start, end + 1))
+                temp.push(line.substring(start, end + 1))
                 start += 1
                 end += 1
                 
                 this.lineDictionary[lineno] = temp; 
     
             }
+            
         }
-            lineno++; 
+        lineno++;  
         
     }
         this.orig = result;
         for(let i = 0; i < this.orig.length; i++) {
             this.origHashed.push(this.hash(this.orig[i]))
         }
+
 
         
         
@@ -283,9 +292,13 @@ class FileComparator {
             
         }
         
+      
         this.origHashed = []; 
-
+      
+        
+        
         this.getLineNo(fingerprints)
+       
 
 
 
@@ -297,9 +310,9 @@ class FileComparator {
     
         
     
-    
+      
         return fingerprints
-        
+
     }
 
     getLineNo(fingerprints :Array<Array<number>>) {

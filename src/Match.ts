@@ -25,10 +25,12 @@ class Match {
         let obj :any = 
         {
         "id": this.id,
-         "student1Code": {"fileName": "this is where we put name 1", "startLine": this.startLineA, "endLine" : this.endLineA},
-         "student2Code": {"fileName": "this is where we put name 2", "startLine": this.startLineB, "endLine": this.endLineB},
-        
-        };
+        "match": 
+        [
+            {"fileName": "this is where we put name 1", "startLine": this.startLineA, "endLine" : this.endLineA},
+            {"fileName": "this is where we put name 2", "startLine": this.startLineB, "endLine" : this.endLineB},
+        ]
+        }
         output = <JSON>obj;
         return output; 
     }
