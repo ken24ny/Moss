@@ -1,7 +1,7 @@
 class Match {
 
     id :number 
-    hash :number 
+    hash :string  //change this back dude 
     startLineA :number;
     startLineB :number;
     endLineA :number;

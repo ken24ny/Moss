@@ -67,7 +67,7 @@ class FileComparator {
         
         //console.log(b); 
         let b = this.findFingerprints(this.winnowing(this.lineGrams(this.removeWhiteSpace(this.file2), k), w))
-        console.log(this.compare(a, b))
+        this.compare(a, b)
         ////////console.log(this.findFingerprints(this.winnowing(this.kgrams(this.preprocess(this.file2), k), w), this.kgram2))
         }
     }
@@ -107,14 +107,20 @@ class FileComparator {
             for(let f2 of fingerprints2) {
                 if(f1[0] === f2[0]) {
                     //console.log(f1 + " " + f2)
-                    let match = new Match(id, f1[0], f1[1], f1[1], f2[1], f2[1], "person1", "person2"); 
+                    
+                    let match = new Match(id, this.hashDictionary[f1[0]], f1[1], f1[1], f2[1], f2[1], "person1", "person2"); 
+                    if(!match.hash.includes("\r")) {
                     Result.matches.push(match)
                     id++; 
+                    }
+                 
+
                    
                 }
             }
         }
-
+        console.log(this.hashDictionary)
+        console.log(Result.matches)
         return Result.matches
 
     }
@@ -210,9 +216,11 @@ class FileComparator {
         let basis = 7
         for(let i=0;i<text.length;i++) {
             let code = text.charCodeAt(i);
-            hashcode += basis * code
+            hashcode += Math.pow(basis,i+1) * code
         }
-    
+
+        this.hashDictionary[hashcode] = text; 
+        
         return hashcode
     }
     
@@ -222,7 +230,6 @@ class FileComparator {
         for(let el of arr) {
     
             hasharray.push(this.hash(el))
-            this.hashDictionary[this.hash(el)] = el;
             
             
         }
@@ -239,6 +246,7 @@ class FileComparator {
             end++
            
        }
+       
         return result
     
     }
@@ -251,7 +259,7 @@ class FileComparator {
         let tempmin = 0
     
 
-
+        
         //object key -> [value,index]
         let fingerprints = Array<Array<number>>()
         
@@ -296,9 +304,9 @@ class FileComparator {
         this.origHashed = []; 
       
         
-        
+
         this.getLineNo(fingerprints)
-       
+        //console.log(fingerprints)
 
 
 

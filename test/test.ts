@@ -26,8 +26,7 @@ let pro2 = [[245,1],[756,12],[895,32],[895,43]]
 
 //console.log(compare(pro1, pro2))
 let fc = new FileComparator() 
-fc.build(program1, program2, 3, 125)
-console.log()
+fc.build(program1, program2, 6, 8)
 //console.log(fc.removeWhiteSpace(program1.toString()))
 
 
