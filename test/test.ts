@@ -1,4 +1,6 @@
 import { removeWhiteSpace, preprocess,kgrams,winnowing,findmin} from "../src/compare";
+import { expect } from 'chai';
+import 'mocha';
 import * as fs from 'fs';
 
 import { compare } from "../src/compare"
@@ -26,8 +28,31 @@ let pro2 = [[245,1],[756,12],[895,32],[895,43]]
 
 //console.log(compare(pro1, pro2))
 let fc = new FileComparator() 
-fc.build(program1, program2, 6, 8)
+//fc.build(program1, program2, 6, 8)
 //console.log(fc.removeWhiteSpace(program1.toString()))
+
+
+describe("whitebox tests for Comparison", () => {
+    const fc = new FileComparator();
+  
+    it("call removewhiteSpace on regular string", () => {  
+      let ken = 'My name is I study computer science Ken at Northeastern';
+      let kenremoved = 'mynameisistudycomputersciencekenatnortheastern';
+      expect(fc.removeWhiteSpace(ken)).to.equal(kenremoved);
+    });
+  
+    it("call sorter on a space", () => {
+      expect(fc.removeWhiteSpace(" ")).to.equal("");
+    });
+
+    it("count lines of the given sample program1", () => {
+        let program1 = fs.readFileSync("src\\diff1.js")
+        expect(fc.countLines(program1.toString())).to.equal(146);
+      });
+
+})
+  
+
 
 
 //Result.addMatchesToJSON()
@@ -64,8 +89,7 @@ fc.build(program1, program2, 6, 8)
 
 //console.log(kgrams(preprocess(brandon),5))
 //console.log(winnowing(kgrams(preprocess(program1.toString()),5),4))
-/*
-console.log(winnowing(kgrams(preprocess(brandon),5),4))
-console.log('/////')
-console.log(winnowing(kgrams(preprocess(ken2),5),4))
-*/
+
+//console.log(winnowing(kgrams(preprocess(brandon),5),4))
+//console.log('/////')
+//console.log(winnowing(kgrams(preprocess(ken2),5),4))

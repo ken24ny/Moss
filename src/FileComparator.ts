@@ -1,5 +1,4 @@
 import * as fs from 'fs';
-import traverse from "babel-traverse";
 import { ENGINE_METHOD_PKEY_ASN1_METHS } from 'constants';
 import Result from "./Result"
 import Match from './Match';
@@ -68,12 +67,13 @@ class FileComparator {
         //console.log(b); 
         let b = this.findFingerprints(this.winnowing(this.lineGrams(this.removeWhiteSpace(this.file2), k), w))
         this.compare(a, b)
+        console.log(this.lineDictionary)
         ////////console.log(this.findFingerprints(this.winnowing(this.kgrams(this.preprocess(this.file2), k), w), this.kgram2))
         }
     }
 
     countLines(file) {
-        return file.split("\n").length - 1; 
+        return file.split("\n").length; 
 
     }
 
@@ -323,6 +323,7 @@ class FileComparator {
 
     }
 
+    //converts the fingerprints index in the original list of hash lists to the actual position in the program
     getLineNo(fingerprints :Array<Array<number>>) {
         let numberOfElements = 0; 
         let j = 0; 
