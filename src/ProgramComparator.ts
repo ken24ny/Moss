@@ -1,5 +1,6 @@
 import FileComparator from "../src/FileComparator"
 import MyFile from "../src/MyFile"
+import Result from "../src/Result"
 
 
 export class ProgramComparator {
@@ -13,11 +14,17 @@ export class ProgramComparator {
 
     }
 
+    /**
+     * 
+     * @param kgram 
+     * @param window 
+     */
     public compareall(kgram:number,window:number) {
         let fc = new FileComparator();
         for(let fileA of this.filearray1) {
             for(let fileB of this.filearray2) {
                 fc.build(fileA,fileB,kgram,window)
+                Result.addMatchesToJSON()
             }
         }
     }

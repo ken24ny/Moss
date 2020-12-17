@@ -11,6 +11,7 @@ class Match {
     private fileAname :string
     private fileBname :string
 
+    // constructor fot Match
     public constructor(id: number, hash: any, startLineA: number,  endLineA: number, startLineB: number, endLineB: number, personA: string, personB: string, fileAname: string,fileBname: string) {
         this.id = id; 
         this.hash = hash; 
@@ -25,6 +26,11 @@ class Match {
     }
 
 
+    /**
+     * function that converts the matches of the two programs
+     * to a JSON object. This is used to send plagarism information
+     * to the frontend.
+     */
     public convertJSON() {
         let output: JSON;
         let obj :any = 

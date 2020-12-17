@@ -2,6 +2,8 @@ import * as express from 'express';
 import Result from "./Result"
 import FileComparator from "./FileComparator"
 import * as fs from 'fs';
+import MyFile from "../src/MyFile";
+import ProgramComparator from "../src/ProgramComparator"
 const app = express();
 
 
@@ -21,13 +23,16 @@ app.get('/',(req: express.Request,res: express.Response) =>{
 
 app.get('/', (req: express.Request, res: express.Response) => {
     //res.status(200).send("this works"); 
-    let program1 = fs.readFileSync("src\\diff1.js")
-    let program2 = fs.readFileSync("src\\diff2.js")
+    let p1 = fs.readFileSync("src\\diff1.js")
+    let p2 = fs.readFileSync("src\\diff2.js")
+    let program1 = new MyFile("program1",p1,'person1')
+    let program2 = new MyFile("program2",p2,'person2')
     let fc = new FileComparator() 
-
+    let pc = new ProgramComparator([program1],[program2])
+    pc.compareall(6,6)
     //fc.build(program1, program2, 125, 125)
-    console.log(Result.matches)
-    Result.addMatchesToJSON()
+    //console.log(Result.matches)
+   
     res.status(200).send(Result.matchesJSON);
 })
 

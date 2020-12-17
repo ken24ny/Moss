@@ -55,7 +55,7 @@ class FileComparator {
     }
 
     /*
-    * Function which clears everything
+    * Function which clears the lists used.
     */
     public clear() {
         this.hashDictionary = {}
@@ -64,10 +64,9 @@ class FileComparator {
         this.kgram2 = []; 
         this.orig = []; 
         this.origHashed = []; 
-        Result.matches = []; 
     }
     
-    
+    /*
     public getOrigLine(file :string, lineNo :number) {
         let filearr = file.split("\n"); 
         for(let i = 0; i < filearr.length; i++) {
@@ -77,6 +76,7 @@ class FileComparator {
         }
         return ""; 
     }
+    */
     //hashcode
     //get substr from hashcode 
     //for line in origfile 
@@ -85,6 +85,13 @@ class FileComparator {
     //if line contains targetSubStr 
     //remove the substring from the original file at that particular line and update our copy of the original file (to avoid repetitions)
     //return line number  
+
+    /**
+     * Finds the hashed that are identical in the two programs and creates a list of matches with the necessary info.
+     * 
+     * @param fingerprints1 all finger prints from program 1
+     * @param fingerprints2 all fingerpritns from prgram 2
+     */
     compare(fingerprints1 :Array<Array<number>>, fingerprints2 :Array<Array<number>>) {
         let id = 1; 
         for(let f1 of fingerprints1) {
@@ -113,26 +120,34 @@ class FileComparator {
 
     }
 
-    /*
-    *  Checks if the two programs are a exact match
-    */
+    /**
+     * 
+     * Checks if the two programs are a exact match
+     * 
+     * @param program1 program as string
+     * @param program2 program as string
+     */
     public exactmatch(program1: string,program2: string): Boolean {
         return this.removeWhiteSpace(program1) === this.removeWhiteSpace(program2);
     }
     
     
     
-    /*
-    *  Removes the whitespace from the sting
-    */
+    /**
+     * Removes the whitespace and converts the given string to lowercase 
+     * @param program 
+     */
     public removeWhiteSpace(program: string): string {
         
         return program.toLowerCase().replace(/ +?/g, '')
     }
 
-    /*
-    *
-    */
+    /**
+     * 
+     * converts the given program into winnowed k grams by line
+     * @param program program as string
+     * @param k size of the k grams 
+     */
     public lineGrams(program:string, k:number) :Array<string> {
         this.lineDictionary = {}; 
         
@@ -216,7 +231,7 @@ class FileComparator {
     }
     
     /*
-    * Creates the winnowing
+    * Winnows the array of program strings and creates a window based on the given window size
     */
     public winnowing(arr:Array<String>,size:number):Array<Array<number>> {
         let hasharray = []
@@ -245,7 +260,7 @@ class FileComparator {
     
     }
 
-    //
+    // converts the line dictionary to show how many elements are in each array
     public linesize(linedict: Object) {
         let result = Array<Array<number>>()
         for(let key in linedict) {
