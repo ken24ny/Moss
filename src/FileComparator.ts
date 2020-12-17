@@ -2,73 +2,50 @@ import * as fs from 'fs';
 import { ENGINE_METHOD_PKEY_ASN1_METHS } from 'constants';
 import Result from "./Result"
 import Match from './Match';
+import MyFile from "./MyFile"
 class FileComparator {
     
 
-   // let x = 0 // removes all white space from a string of programs and coverts to lowercase
-    
-   // let hashDictionary = {}
+
    //original list of substr from winnowing program 
-    orig = Array<string> ()
+   private orig = Array<string> ()
 
-    //original list of substr from winnowing program as hash
-    origHashed = Array<number>()
+   //original list of substr from winnowing program as hash
+   private origHashed = Array<number>()
 
-   public file1 :string 
-   public file2 :string
+   private file1 :string 
+   private file2 :string
 
-   kgram1 :number[]
-   kgram2 :number[]
+   private kgram1 :number[]
+   private kgram2 :number[]
    hashDictionary = {} 
-   lineDictionary = {}
+    lineDictionary = {}
 
-   //[98 47 17 48 569 ] entire program
-   //[[1 24 2 4 ],[ 1 2 4 5 2],1 2 4 6 7[],[5 7 8 ]]
-   //1 4 5
-   // index of 3 6 9
-   //dictionary that stores [1, [hidf , ndndd, dskn]],[2,[]hdhsi cdhscn csk]  ... 
-
-
-   /*
-   constructor(f1 :Buffer, f2 :Buffer) {
-        this.file1 = f1.toString()
-        this.file2 = f2.toString()
-   }
-   */
-    
    //pass in buffers
    //TODO change from Buffer to File (or whatever Sky needs)
    
    //result of comparing 
-    build(f1 :Buffer, f2 :Buffer, k :number, w :number) {
+   public build(f1 :MyFile, f2 :MyFile, k :number, w :number) {
 
-       
-
-        this.file1 = f1.toString()
-        this.file2 = f2.toString()
+        this.file1 = f1.getContent().toString()
+        this.file2 = f2.getContent().toString()
+        //console.log(this.file1)
+        //console.log(this.file2)
         if(this.exactmatch(this.file1, this.file2)) {
+    
             
-            let match = new Match(1, 1, 1, this.countLines(this.file1), 1, this.countLines(this.file2), "bob", "alice")
+            let match = new Match(1, 1, 1, this.countLines(this.file1), 1, this.countLines(this.file2), f1.getSubmitter(), f2.getSubmitter(), f1.getName(), f2.getName())
             Result.matches.push(match)
-            //console.log(Result.matches)
             
         }
         else {
 
         let a = this.findFingerprints(this.winnowing(this.lineGrams(this.removeWhiteSpace(this.file1), k), w))
-    
-
-       // console.log(a); 
-      //  this.clear()
-      //  let b = this.findFingerprints(this.winnowing(this.lineGrams(this.removeWhiteSpace(this.file2), k), w))
-
-
-        
-        //console.log(b); 
         let b = this.findFingerprints(this.winnowing(this.lineGrams(this.removeWhiteSpace(this.file2), k), w))
+
         this.compare(a, b)
-        console.log(this.lineDictionary)
-        ////////console.log(this.findFingerprints(this.winnowing(this.kgrams(this.preprocess(this.file2), k), w), this.kgram2))
+        //console.log(this.orig)
+        //console.log(this.lineDictionary)
         }
     }
 
@@ -77,21 +54,29 @@ class FileComparator {
 
     }
 
-    clear() {
+    /*
+    * Function which clears everything
+    */
+    public clear() {
         this.hashDictionary = {}
         this.lineDictionary = {}
         this.kgram1 = []; 
         this.kgram2 = []; 
         this.orig = []; 
         this.origHashed = []; 
+        Result.matches = []; 
     }
     
-    //for line in original file 
-    //if(line.substring(0, 2) == "//")  
-    //ignore
-    //
     
-    
+    public getOrigLine(file :string, lineNo :number) {
+        let filearr = file.split("\n"); 
+        for(let i = 0; i < filearr.length; i++) {
+            if(i == lineNo - 1) {
+                return filearr[i]; 
+            }
+        }
+        return ""; 
+    }
     //hashcode
     //get substr from hashcode 
     //for line in origfile 
@@ -99,16 +84,17 @@ class FileComparator {
     //line = line.substring(0, line.indexOf("//")); 
     //if line contains targetSubStr 
     //remove the substring from the original file at that particular line and update our copy of the original file (to avoid repetitions)
-    //return line number 
-    //lineno++ 
+    //return line number  
     compare(fingerprints1 :Array<Array<number>>, fingerprints2 :Array<Array<number>>) {
         let id = 1; 
         for(let f1 of fingerprints1) {
             for(let f2 of fingerprints2) {
-                if(f1[0] === f2[0]) {
+                //let cond1 = this.getOrigLine(this.file1, f1[1]).includes(this.hashDictionary[f1[0]])
+                //let cond2 = this.getOrigLine(this.file2, f2[1]).includes(this.hashDictionary[f2[0]])
+                if(this.hashDictionary[f1[0]] === this.hashDictionary[f2[0]]) {
                     //console.log(f1 + " " + f2)
                     
-                    let match = new Match(id, this.hashDictionary[f1[0]], f1[1], f1[1], f2[1], f2[1], "person1", "person2"); 
+                    let match = new Match(id, this.hashDictionary[f1[0]], f1[1], f1[1], f2[1], f2[1], "person1", "person2","filenameA",'fileNameB'); 
                     if(!match.hash.includes("\r")) {
                     Result.matches.push(match)
                     id++; 
@@ -119,25 +105,35 @@ class FileComparator {
                 }
             }
         }
-        console.log(this.hashDictionary)
-        console.log(Result.matches)
+        //console.log(this.hashDictionary)
+        
+        //console.log(Result.matches)
+       // console.log(this.linesize(this.lineDictionary))
         return Result.matches
 
     }
 
-     exactmatch(program1: string,program2: string): Boolean {
+    /*
+    *  Checks if the two programs are a exact match
+    */
+    public exactmatch(program1: string,program2: string): Boolean {
         return this.removeWhiteSpace(program1) === this.removeWhiteSpace(program2);
     }
     
     
     
-    
-    removeWhiteSpace(program: string): string {
-        //return program.toLowerCase().replace(/\s/g, "");
+    /*
+    *  Removes the whitespace from the sting
+    */
+    public removeWhiteSpace(program: string): string {
         
         return program.toLowerCase().replace(/ +?/g, '')
     }
-    lineGrams(program:string, k:number) :Array<string> {
+
+    /*
+    *
+    */
+    public lineGrams(program:string, k:number) :Array<string> {
         this.lineDictionary = {}; 
         
         let result :Array<string> = []
@@ -165,8 +161,6 @@ class FileComparator {
                
                 insideComment = true; 
             }
-            //TODO fix single line problem
-
            
             if(line.includes("*/")) {
                 line = line.substring(line.indexOf("*/"), line.length + 1); 
@@ -201,17 +195,14 @@ class FileComparator {
         for(let i = 0; i < this.orig.length; i++) {
             this.origHashed.push(this.hash(this.orig[i]))
         }
-
-
-        
-        
-
         return result; 
     }
     
     
-    
-    hash(text:String):number {
+    /*
+    * Creates a hashcode from string
+    */
+    public hash(text:String):number {
         let hashcode = 0;
         let basis = 7
         for(let i=0;i<text.length;i++) {
@@ -224,7 +215,10 @@ class FileComparator {
         return hashcode
     }
     
-    winnowing(arr:Array<String>,size:number):Array<Array<number>> {
+    /*
+    * Creates the winnowing
+    */
+    public winnowing(arr:Array<String>,size:number):Array<Array<number>> {
         let hasharray = []
         let result = Array<Array<number>>()
         for(let el of arr) {
@@ -250,16 +244,21 @@ class FileComparator {
         return result
     
     }
-    
 
-    
+    //
+    public linesize(linedict: Object) {
+        let result = Array<Array<number>>()
+        for(let key in linedict) {
+            let size = linedict[key].length
+            result.push([Number(key),size])
+        }
+
+        return result
+    } 
     
     //selet the minimum of fingerprints in window
-    findFingerprints(windows: Array<Array<number>>) : Array<Array<number>> {
+    public findFingerprints(windows: Array<Array<number>>) : Array<Array<number>> {
         let tempmin = 0
-    
-
-        
         //object key -> [value,index]
         let fingerprints = Array<Array<number>>()
         
@@ -268,12 +267,6 @@ class FileComparator {
            
             let tempmin = Math.min(...window)
             let index = window.lastIndexOf(tempmin)
-            
-            
-
-            //0
-            // i = 0
-            // i ++
             
             if(fingerprints.length == 0) {
                 fingerprints.push([tempmin,index])
@@ -296,35 +289,50 @@ class FileComparator {
             
             let index = this.origHashed.indexOf(fingerprints[i][0], saveIndex + 1)
             fingerprints[i][1] = index; 
+            //console.log(this.hashDictionary[(fingerprints[i][0])],index)
             saveIndex = index;
             
         }
-        
       
         this.origHashed = []; 
-      
-        
-
         this.getLineNo(fingerprints)
-        //console.log(fingerprints)
-
-
-
-
-        
-
-        
-    
-    
-        
-    
+        //this.getlinenumber2(fingerprints,this.linesize(this.lineDictionary))
       
         return fingerprints
 
     }
 
+    //[XXX,38]
+    //[1,8][2,4][5,16][7,12] linesize
+    public getlinenumber2(fingerprints :Array<Array<number>>,linesize :Array<Array<number>>) {
+        let result = 0
+        let j = 0
+
+        while(j < fingerprints.length) {
+        for(let sizelength of linesize) {
+           // if(j > fingerprints.length) {
+           //     break;
+           // }
+        
+            result += sizelength[1]
+            if(fingerprints[j][1] <= result) {
+                    //returns the line number of the first fingerprint that we have
+                    fingerprints[j][1] = sizelength[0]
+                    result = 0
+                    j++
+                    break;
+             }
+
+            }
+        }
+            //return fingerprints;
+        }
+
+
+    
+
     //converts the fingerprints index in the original list of hash lists to the actual position in the program
-    getLineNo(fingerprints :Array<Array<number>>) {
+    public getLineNo(fingerprints :Array<Array<number>>) {
         let numberOfElements = 0; 
         let j = 0; 
         for(let key in this.lineDictionary) {
@@ -337,23 +345,15 @@ class FileComparator {
                 }
 
                 if(numberOfElements === fingerprints[j][1]) {
-                    fingerprints[j][1] = parseInt(key, 10); 
+                    fingerprints[j][1] = Number(key); 
                     j++; 
                 }
                 numberOfElements++; 
                 
-                
             }
-         
         }
-
-
     }
-
-    
-  
-    
-
-
 }
+
+
 export default FileComparator

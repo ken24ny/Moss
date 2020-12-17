@@ -25,7 +25,7 @@ app.get('/', (req: express.Request, res: express.Response) => {
     let program2 = fs.readFileSync("src\\diff2.js")
     let fc = new FileComparator() 
 
-    fc.build(program1, program2, 125, 125)
+    //fc.build(program1, program2, 125, 125)
     console.log(Result.matches)
     Result.addMatchesToJSON()
     res.status(200).send(Result.matchesJSON);
